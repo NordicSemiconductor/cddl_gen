@@ -34,10 +34,15 @@ def get_dependencies():
                 l_dependencies.append(line.strip())
     return l_dependencies
 
+def get_version():
+    p_version = Path(P_REPO_ROOT, 'VERSION').absolute()
+
+    with p_version.open(encoding='utf-8') as f:
+        return f.read()
 
 setuptools.setup(
     name='cddl-gen',
-    version='0.2.0',
+    version=get_version(),
     description='Generate code from CDDL description',
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
