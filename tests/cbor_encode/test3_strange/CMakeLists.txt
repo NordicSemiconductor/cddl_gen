@@ -32,6 +32,7 @@ target_cddl_source(app ../../cases/strange.cddl ENCODE ENTRY_TYPES
   SingleInt
   SingleInt2
   Unabstracted
+  DoubleMap
   DEFAULT_MAX_QTY 6
   ${VERBOSE}
   ${CANONICAL}

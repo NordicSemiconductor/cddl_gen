@@ -877,9 +877,22 @@ class CddlXcoder(CddlParser):
     def choice_var_condition(self):
         return self.type == "UNION"
 
+    def reduced_key_var_condition(self):
+        if self.key is not None:
+            return True
+        return False
+
     # Whether to include a "key" variable for this element.
     def key_var_condition(self):
-        return self.key is not None
+        if self.reduced_key_var_condition():
+            return True
+        if (self.type == "OTHER"
+                # and (not self.my_types[self.value].is_unambiguous())
+                and self.my_types[self.value].key_var_condition()):
+            return True
+        if self.type in ["GROUP", "UNION"] and len(self.value) >= 1 and self.value[0].reduced_key_var_condition():
+            return True
+        return False
 
     # Whether this value adds any repeated elements by itself. I.e. excluding
     # multiple elements from children.
@@ -933,7 +946,7 @@ class CddlXcoder(CddlParser):
     def single_func_impl_condition(self):
         return (
             False
-            or self.key_var_condition()
+            or self.reduced_key_var_condition()
             or self.cbor_var_condition()
             or self.tags
             or self.type_def_condition()
@@ -1575,7 +1588,7 @@ class CodeGenerator(CddlXcoder):
             decl += self.child_declarations()
             multi_var = len(decl) > 1
 
-        if self.key_var_condition():
+        if self.reduced_key_var_condition():
             key_var = self.key.full_declaration()
             decl = key_var + decl
             multi_var = key_var != []
@@ -1632,6 +1645,7 @@ class CodeGenerator(CddlXcoder):
             multi_var = present_var != []
 
         assert multi_var == self.multi_var_condition()
+
         return decl
 
     # Return the type definition of this element. If there are multiple variables, wrap them in a struct so the function
@@ -1653,7 +1667,7 @@ class CodeGenerator(CddlXcoder):
             ret_val.extend([elem for typedef in [child.type_def() for child in self.value] for elem in typedef])
         if self.cbor_var_condition():
             ret_val.extend(self.cbor.type_def())
-        if self.key_var_condition():
+        if self.reduced_key_var_condition():
             ret_val.extend(self.key.type_def())
         if self.type == "OTHER":
             ret_val.extend(self.my_types[self.value].type_def())
