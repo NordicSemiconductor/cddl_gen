@@ -15,7 +15,8 @@ add_subdirectory(../../.. ${PROJECT_BINARY_DIR}/cddl_gen)
 
 FILE(GLOB app_sources src/*.c)
 target_sources(app PRIVATE
-  ${app_sources})
+  ${app_sources}
+  ../../fuzz/fuzz_pet.c)
 
 target_cddl_source(app ../../cases/pet.cddl ENTRY_TYPES Pet
   DECODE
