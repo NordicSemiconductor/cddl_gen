@@ -34,7 +34,7 @@ do_test() {
 }
 
 
-for dir in 'test1_suit_old_formats/' 'test2_suit/' 'test3_simple/' 'test5_strange/' 'test7_suit9_simple' ;
+for dir in 'test1_suit_old_formats/' 'test2_suit/' 'test3_simple/' 'test5_strange/' 'test7_suit9_simple' 'test8_suit12' ;
 do
         for board in 'native_posix' 'native_posix_64' ;
         do
