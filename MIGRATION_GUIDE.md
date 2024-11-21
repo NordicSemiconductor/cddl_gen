@@ -1,17 +1,10 @@
 # zcbor v. 0.9.99
 
-* `zcbor_simple_*()` functions have been removed to avoid confusion about their use.
-  They are still in the C file because they are used by other functions.
-  Instead, use the specific functions for the currently supported simple values, i.e.
-  `zcbor_bool_*()`, `zcbor_nil_*()`, and `zcbor_undefined_*()`.
-  If a removed variant is strictly needed, add your own forward declaration in your code.
+* Code generation:
 
-* Code generation naming:
-
-  * More C keywords are now capitalized to avoid naming collision.
-    You might have to capitalize some instances if your code was generated to have those names.
-
-  * A fix was made to the naming of bstr elements with a .size specifier, which might mean that these elements change name in your code when you regenerate.
+  * Integers whose values are known to be within 8 or 16 bytes now use the corresponding integer types (`uint8_t`/`int8_t`/`uint16_t`/`int16_t`).
+    In certain specific cases, the type of an argument to a `cbor_decode_*` or `cbor_decode_*`, requiring changes in your non-generated code.
+    More commonly, struct members will change to use smaller int types.
 
 
 # zcbor v. 0.9.0
